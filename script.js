@@ -62,13 +62,12 @@
     document.body.style.overflow = 'hidden';
   }
 
-  function onFirstTouch() {
+  function onFirstClick() {
     unlock();
     show(true);
   }
 
-  document.addEventListener('pointerdown', onFirstTouch, { once: true });
-  document.addEventListener('touchstart', onFirstTouch, { once: true });
+  document.addEventListener('click', onFirstClick, { once: true });
   document.addEventListener('click', function () {
     if (fired) playSound();
   });
