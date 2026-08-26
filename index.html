@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#1f2430">
+  <title>ТехноМаркет — интернет-магазин электроники</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Техно<b>Маркет</b></span>
+      </div>
+      <nav class="nav">
+        <a href="#">Смартфоны</a>
+        <a href="#">Ноутбуки</a>
+        <a href="#">Телевизоры</a>
+        <a href="#">Аксессуары</a>
+        <a href="#">Распродажа</a>
+      </nav>
+      <div class="cart">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-count">2</span>
+        <span class="cart-total">54 990 ₽</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <span class="hero-badge">🔥 Неделя супер-скидок</span>
+        <h1>Скидки до <span class="accent">70%</span><br>на всю технику</h1>
+        <p>Только до конца недели. Успей купить по лучшей цене в городе!</p>
+        <button class="btn btn-primary" id="heroBtn">Перейти к скидкам</button>
+      </div>
+      <div class="hero-pic">📦</div>
+    </div>
+  </section>
+
+  <main class="container">
+    <section class="section">
+      <div class="section-head">
+        <h2>Хиты продаж</h2>
+        <a href="#" class="all-link">Смотреть все →</a>
+      </div>
+      <div class="grid" id="grid">
+        <div class="card">
+          <div class="card-img"><img src="assets/products/phone.jpg" alt="Смартфон X-Pro"></div>
+          <h3>Смартфон X-Pro 256 ГБ</h3>
+          <p class="card-desc">6.7", тройная камера, батарея 5000 мАч</p>
+          <div class="card-bottom">
+            <span class="price">49 990 ₽ <s>74 990 ₽</s></span>
+            <button class="btn btn-buy">В корзину</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img"><img src="assets/products/laptop.jpg" alt="Ноутбук AirBook"></div>
+          <h3>Ноутбук AirBook 14"</h3>
+          <p class="card-desc">32 ГБ ОЗУ, 1 ТБ SSD, вес 1.2 кг</p>
+          <div class="card-bottom">
+            <span class="price">89 990 ₽ <s>129 990 ₽</s></span>
+            <button class="btn btn-buy">В корзину</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img"><img src="assets/products/tv.jpg" alt="Телевизор OLED"></div>
+          <h3>Телевизор OLED 65"</h3>
+          <p class="card-desc">4K, 120 Гц, Smart TV</p>
+          <div class="card-bottom">
+            <span class="price">109 990 ₽ <s>159 990 ₽</s></span>
+            <button class="btn btn-buy">В корзину</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img"><img src="assets/products/headphones.jpg" alt="Наушники AirSound"></div>
+          <h3>Наушники AirSound Pro</h3>
+          <p class="card-desc">Шумоподавление, 40 часов работы</p>
+          <div class="card-bottom">
+            <span class="price">12 990 ₽ <s>19 990 ₽</s></span>
+            <button class="btn btn-buy">В корзину</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img"><img src="assets/products/watch.jpg" alt="Умные часы FitX"></div>
+          <h3>Умные часы FitX</h3>
+          <p class="card-desc">Пульс, сон, GPS, водозащита 5 АТМ</p>
+          <div class="card-bottom">
+            <span class="price">8 990 ₽ <s>14 990 ₽</s></span>
+            <button class="btn btn-buy">В корзину</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-img"><img src="assets/products/camera.jpg" alt="Камера 4K Mirro"></div>
+          <h3>Камера 4K Mirro</h3>
+          <p class="card-desc">Стабилизация, съёмка ночью</p>
+          <div class="card-bottom">
+            <span class="price">34 990 ₽ <s>49 990 ₽</s></span>
+            <button class="btn btn-buy">В корзину</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="promo">
+      <div class="promo-inner">
+        <h2>Промокод на скидку</h2>
+        <p>Введите промокод и получите ещё <b>−10%</b> на первый заказ</p>
+        <div class="promo-form">
+          <input type="text" id="promoInput" placeholder="Например: SALE2026">
+          <button class="btn btn-primary" id="promoBtn">Применить</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section reviews">
+      <div class="section-head">
+        <h2>Отзывы покупателей</h2>
+      </div>
+      <div class="review-row">
+        <div class="review">
+          <p>«Отличный магазин, доставили за 2 дня!»</p>
+          <span>★ ★ ★ ★ ★ — Анна</span>
+        </div>
+        <div class="review">
+          <p>«Цены ниже всех, рекомендую»</p>
+          <span>★ ★ ★ ★ ★ — Дмитрий</span>
+        </div>
+        <div class="review">
+          <p>«Всё приехало целым, спасибо!»</p>
+          <span>★ ★ ★ ★ ★ — Олег</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">Техно<b>Маркет</b></span>
+      </div>
+      <p class="footer-note">© 2026 ТехноМаркет. Все права защищены.</p>
+    </div>
+  </footer>
+
+  <div class="scare-overlay" id="scareOverlay">
+    <img src="assets/scare.png" alt="" class="scare-img" onerror="this.style.display='none'">
+    <div class="scare-strobe"></div>
+    <div class="scare-noise"></div>
+  </div>
+
+  <script src="script.js?v=3"></script>
+</body>
+</html>
