@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOLAR SYSTEM — Interactive Journey</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  
+  <div id="ui" class="ui">
+    <header class="top-bar">
+      <div class="logo">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span class="logo-text">Solar <span class="accent">System</span></span>
+      </div>
+      <nav class="nav-pills" id="navPills" role="tablist"></nav>
+      <div class="view-toggle" id="viewToggle" title="Toggle labels (L)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <button class="collapse-btn" id="topFold" aria-label="Hide toolbar" title="Hide toolbar (H)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 15l6-6 6 6"/></svg>
+      </button>
+    </header>
+
+    <main class="main-content">
+      <div class="focus-panel" id="focusPanel" role="region" aria-label="Planet details">
+        <button class="close-focus" id="closeFocus" aria-label="Return to system view">✕</button>
+        <div class="focus-content">
+          <div class="planet-header">
+            <div class="planet-avatar" id="planetAvatar"></div>
+            <div class="planet-title">
+              <h2 id="focusName">Earth</h2>
+              <p class="planet-type" id="focusType">Terrestrial Planet</p>
+            </div>
+          </div>
+          <dl class="planet-stats" id="planetStats"></dl>
+          <div class="planet-description" id="planetDesc"></div>
+          <div class="moons-list" id="moonsList"></div>
+        </div>
+      </div>
+
+      <div class="hud" id="hud" aria-hidden="true">
+        <button class="collapse-btn" id="hudFold" aria-label="Hide controls" title="Hide controls">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 15l6-6 6 6"/></svg>
+        </button>
+        <div class="hud-row">
+          <span class="hud-label">Speed</span>
+          <input type="range" id="speedSlider" min="0" max="5" step="0.1" value="1" aria-label="Time speed">
+          <span class="hud-value" id="speedValue">1.0×</span>
+        </div>
+        <div class="hud-row">
+          <span class="hud-label">Scale</span>
+          <input type="range" id="scaleSlider" min="0.3" max="3" step="0.1" value="1" aria-label="Planet size scale">
+          <span class="hud-value" id="scaleValue">1.0×</span>
+        </div>
+        <div class="hud-row">
+          <span class="hud-label">Date</span>
+          <span class="hud-value" id="dateDisplay">J2000.0</span>
+        </div>
+      </div>
+    </main>
+
+    <footer class="bottom-bar">
+      <div class="legend" id="legend"></div>
+      <p class="hint" id="hintText">Click a planet to explore • Scroll to zoom • Drag to rotate • L: labels • Space: pause</p>
+      <button class="collapse-btn" id="bottomFold" aria-label="Hide bottom bar" title="Hide bottom bar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 9l-6 6-6-6"/></svg>
+      </button>
+    </footer>
+  </div>
+
+  <!-- floating restore handles (shown when a block is folded) -->
+  <button class="fold-handle top" id="topHandle" aria-label="Show toolbar" title="Show toolbar (H)">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 15l6-6 6 6"/></svg>
+  </button>
+  <button class="fold-handle bottom hud-handle" id="hudHandle" aria-label="Show controls" title="Show controls">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 15l6-6 6 6"/></svg>
+  </button>
+  <button class="fold-handle bottom" id="bottomHandle" aria-label="Show bottom bar" title="Show bottom bar">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 9l-6 6-6-6"/></svg>
+  </button>
+
+  <div class="loading" id="loading" aria-live="polite">
+    <div class="loading-spinner"></div>
+    <p>Loading solar system…</p>
+    <div class="loading-progress"><span id="loadPercent">0%</span></div>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.165.0/build/three.module.js",
+      "three/addons/": "https://unpkg.com/three@0.165.0/examples/jsm/"
+    }
+  }
+  </script>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
