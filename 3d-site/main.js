@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 /* ================= UI refs & state ================= */
 const $ = (id) => document.getElementById(id);
 const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const IS_TOUCH = window.matchMedia('(pointer: coarse)').matches || ('ontouchstart' in window);
 
 window.addEventListener('error', (e) => {
   document.body.dataset.jsError = (e.message || 'error') + ' @' + (e.filename || '') + ':' + (e.lineno || '');
@@ -32,7 +33,9 @@ const hintText = $('hintText');
 const loading = $('loading');
 const loadPercent = $('loadPercent');
 
-const HINT_DEFAULT = 'Click a planet to explore • Scroll to zoom • Drag to rotate • L: labels • Space: pause';
+const HINT_DEFAULT = IS_TOUCH
+  ? 'Tap a planet · Pinch to zoom · Drag to rotate'
+  : 'Click a planet to explore • Scroll to zoom • Drag to rotate • L: labels • Space: pause';
 hintText.textContent = HINT_DEFAULT;
 let timeScale = parseFloat(speedSlider.value);
 let sizeScale = parseFloat(scaleSlider.value);
@@ -54,9 +57,33 @@ camera.position.copy(HOME_POS);
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
 renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+// phones push a very high DPR — cap it lower there to keep the framerate smooth
+renderer.setPixelRatio(Math.min(devicePixelRatio, IS_TOUCH ? 1.5 : 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.15;
+
+/* --- Phone / portrait framing ------------------------------------------
+   On narrow screens widen the vertical FOV so the horizontal field of view
+   stays close to the desktop one, and (at boot only) pull the home camera
+   back so the whole system fits on a tall phone display. */
+const BASE_FOV = 50;
+const BASE_ASPECT = 16 / 9;
+const BASE_H_TAN = Math.tan(THREE.MathUtils.degToRad(BASE_FOV / 2)) * BASE_ASPECT;
+let homeScale = 1; // extra pull-back of the "home" view (1 = desktop)
+
+function adaptCameraFov(applyHome = false) {
+  camera.aspect = innerWidth / innerHeight;
+  let fov = BASE_FOV;
+  if (camera.aspect < BASE_ASPECT) {
+    fov = THREE.MathUtils.radToDeg(2 * Math.atan(BASE_H_TAN / camera.aspect));
+  }
+  camera.fov = Math.min(fov, 85);
+  camera.updateProjectionMatrix();
+  const hHalf = Math.atan(Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect);
+  homeScale = Math.min(BASE_H_TAN / Math.tan(hHalf), 1.9);
+  if (applyHome) camera.position.copy(HOME_POS).multiplyScalar(homeScale);
+}
+adaptCameraFov(true);
 
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
@@ -803,7 +830,7 @@ function unfocus() {
   focusPanel.classList.remove('visible');
   setActivePill(null);
   highlightOrbit(-2);
-  tweenCamera(HOME_POS, ORIGIN, 1.3);
+  tweenCamera(HOME_POS.clone().multiplyScalar(homeScale), ORIGIN, 1.3);
   controls.minDistance = 1.2;
   controls.maxDistance = 420;
   hintText.textContent = HINT_DEFAULT;
@@ -846,7 +873,7 @@ canvas.addEventListener('pointerup', (e) => {
   if (!downPos) return;
   const moved = Math.hypot(e.clientX - downPos.x, e.clientY - downPos.y);
   downPos = null;
-  if (moved > 6) return; // drag, not click
+  if (moved > (IS_TOUCH ? 12 : 6)) return; // drag, not click (fingers jiggle more than mice)
   const idx = pick(e.clientX, e.clientY);
   if (idx !== null && idx !== undefined) focusBody(idx);
 });
@@ -908,8 +935,7 @@ window.addEventListener('keydown', (e) => {
 });
 
 window.addEventListener('resize', () => {
-  camera.aspect = innerWidth / innerHeight;
-  camera.updateProjectionMatrix();
+  adaptCameraFov();
   renderer.setSize(innerWidth, innerHeight);
 });
 

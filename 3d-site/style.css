@@ -44,6 +44,9 @@ html, body {
   pointer-events: none; z-index: 10;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  /* definite single column: prevents the HUD's max-content from widening
+     the whole layout beyond the viewport on narrow screens */
+  grid-template-columns: minmax(0, 1fr);
 }
 
 /* ---------------- Top bar: glass Chrome strip ---------------- */
@@ -494,16 +497,85 @@ html, body {
   }
   .planet-header { border-radius: 20px 20px 0 0; padding-top: 26px; }
   .close-focus { top: 8px; right: 8px; }
+  .focus-content { overflow-y: auto; -webkit-overflow-scrolling: touch; max-height: 100%; }
   .hud { max-width: none; flex-direction: row; flex-wrap: wrap; }
   .hud-row { flex: 1; min-width: 150px; }
-  .bottom-bar { flex-direction: column-reverse; align-items: stretch; text-align: center; padding: 8px 12px; }
-  .hint { text-align: center; min-width: 0; }
-  .legend { justify-content: center; }
+  /* grid (not flex): a nowrap legend's min-content must not widen the bar —
+     minmax(0, 1fr) + min-width:0 pin children to the viewport width */
+  .bottom-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+    text-align: center;
+    padding: 8px 12px;
+  }
+  .bottom-bar .collapse-btn { order: -1; justify-self: center; }
+  .hint { order: 0; width: 100%; min-width: 0; white-space: normal; text-align: center; }
+  .legend { order: 1; width: 100%; min-width: 0; justify-content: center; }
 }
 
-@media (max-width: 520px) {
-  .nav-pills { order: 3; width: 100%; justify-content: flex-start; }
-  .top-bar { height: auto; min-height: 52px; flex-wrap: wrap; padding: 6px 12px; row-gap: 4px; }
+/* ---- Phones: compact bars, fat touch targets, safe-area insets ---- */
+@media (max-width: 640px) {
+  html, body { -webkit-text-size-adjust: 100%; overscroll-behavior: none; }
+  button, .nav-pill, .legend-item { touch-action: manipulation; -webkit-tap-highlight-color: rgba(138, 180, 248, .22); }
+
+  /* top bar: compact row + scrollable planet tabs on a second line */
+  .top-bar {
+    height: auto; min-height: 46px;
+    flex-wrap: wrap; gap: 6px; row-gap: 3px;
+    padding: max(5px, env(safe-area-inset-top)) 8px 5px;
+  }
+  .logo { font-size: 13.5px; gap: 7px; }
+  .logo-mark { width: 16px; height: 16px; }
+  .view-toggle { width: 38px; height: 38px; }
+  .collapse-btn { min-width: 34px; min-height: 34px; }
+  .nav-pills {
+    order: 3; flex: 0 0 auto; justify-content: flex-start;
+    width: calc(100% + 16px); margin: 0 -8px; padding: 0 8px 3px;
+  }
+  .nav-pill { padding: 7px 12px; font-size: 12.5px; }
+
+  /* HUD: full-width panel, one row per slider, bigger sliders */
+  .hud { width: 100%; max-width: none; padding: 10px 50px 10px 12px; gap: 8px; }
+  .hud > .collapse-btn { top: 50%; right: 8px; transform: translateY(-50%); }
+  .hud-row { flex: 1 1 100%; min-width: 0; }
+  .hud-value { min-width: 52px; font-size: 11.5px; text-align: right; }
+  input[type="range"] { height: 30px; touch-action: none; }
+  input[type="range"]::-webkit-slider-thumb { width: 20px; height: 20px; }
+  input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; }
+
+  /* bottom bar: horizontally scrollable legend strip + short hint */
+  .bottom-bar { padding: 7px 8px calc(7px + env(safe-area-inset-bottom)); gap: 5px; }
+  .legend {
+    flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  }
+  .legend::-webkit-scrollbar { display: none; }
+  .legend-item { flex: 0 0 auto; padding: 6px 10px; font-size: 11.5px; }
+  .hint { font-size: 11px; line-height: 1.35; text-align: center; }
+
+  /* focus panel: full-width bottom sheet */
+  .focus-panel { max-height: 58vh; }
+  .planet-header { padding: 24px 14px 12px; gap: 10px; }
+  .close-focus { width: 40px; height: 40px; font-size: 17px; }
+  .planet-stats { gap: 8px; }
+
+  /* floating fold handles: comfortable 44px touch targets */
+  .fold-handle { width: 44px; height: 44px; }
+  .fold-handle.top { top: 94px; }
+  .fold-handle.bottom:not(.hud-handle) { bottom: calc(90px + env(safe-area-inset-bottom)); }
+  .fold-handle.bottom.hud-handle { top: 94px; right: 58px; }
+  /* when the top bar itself is folded, tuck its handle against the top edge */
+  body:has(.top-bar.collapsed) .fold-handle.top { top: calc(8px + env(safe-area-inset-top)); }
+  body:has(.bottom-bar.collapsed) .fold-handle.bottom:not(.hud-handle) { bottom: calc(8px + env(safe-area-inset-bottom)); }
+
+  /* smaller world labels so they don't crowd a small screen */
+  .planet-label { font-size: 10px; padding: 2px 8px; }
+}
+
+@media (max-width: 380px) {
+  .logo-text { font-size: 12.5px; }
+  .hint { font-size: 10.5px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
